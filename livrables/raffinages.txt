@@ -1,0 +1,111 @@
+-- R0: Calculer le PageRank et le poids de chaque noeud du réseau.
+
+-- R1: Comment <<Calculer le PageRank et le poids de chaque noeud du réseau.>>?
+	P: IN type de matrice ici P= Google_Naive
+	I: IN Entier ;nombre maximal d'itteration
+	A: IN Reel ;valeur de phi
+	fichier: IN fichier .net
+	PageRank: OUT fichier .ord
+	Poids: OUT fichier .p
+	N: Entier ; Nombre de Pages	
+
+	N <- N_Page(fichier)
+	Calculer G pour fichier.
+	Calculer Pi Ieme.
+	Calculer le PageRank.
+	Calculer les poids.
+
+-- R2: Comment <<Calculer G pour fichier.>>?
+	fichier: IN fichier .net
+	G: OUT Google_Naive
+
+	Calculer H.
+	Calculer S.
+	Calculer G.
+
+-- R2: Comment <<Calculer Pi Ieme.>>?
+	I: IN Entier
+	N: IN Entier
+	G: IN Google_Naive
+	Pi: OUT Ligne; Longueur N
+	
+	Calculer Pi_0
+	PourChaque i DANS 1..I
+		Calculer Pi_i
+
+-- R2: Comment <<Afficher le PageRank.>>?
+
+
+-- R2: Comment <<Afficher les poids.>>?
+
+-- R3: Comment<<Calculer H.>>?
+	fichier:IN fichier .net
+	H: OUT Google_Naive
+	N: IN Entier 
+	P: Entier ; Nombre des hyperliens
+
+	PourChaque i DANS 0..(N-1) Repeter
+		P <- N_Hyperliens(i, fichier)
+		PourChaque j DANS 0..(N-1) Repeter
+			Si Sont_Lie(i,j) Alors
+				H(i,j) <- 1/P
+			Sinon
+				H(i,j) <- 0
+
+-- R3: Comment<<Calculer S.>>?
+	fichier:IN fichier .net
+	H: IN Google_Naive
+	S: OUT Google_Naive
+	N: IN Entier 
+
+	S <- H
+	PourChaque i DANS 0..(N-1) Repeter
+		Si Puit(i, fichier) Alors
+			PourChaque j DANS 0..(N-1) Repeter
+				S(i,j) <- 1/N
+
+-- R3: Comment<<Calculer G.>>?
+	S: IN Google_Naive
+	G: OUT Google_Naive
+	N: IN Entier 
+	A: IN 
+
+	PourChaque i DANS 0..(N-1) Repeter
+		PourChaque j DANS 0..(N-1) Repeter
+			G(i,j) <- A*S(i,j) + (1-A)/N
+
+-- R3: Comment<<Calculer Pi_0>>?
+	N: IN Entier
+	Pi: IN OUT Ligne
+
+	PourChaque i DANS 0..(N-1)
+		Pi(i) <- 1/N
+
+-- R3: Comment<<Calculer Pi_i>>?
+	N: IN Entier
+	G: Google_Naive
+	Pi: IN OUT Ligne
+	
+	Pi <- Produit(Pi,G)
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+-- R3: Comment<<>>?
+
+	
