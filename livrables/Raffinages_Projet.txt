@@ -190,4 +190,12 @@ Fin Pour ;
 
 R4 : Comment  faire le produit d’une matrice ligne avec une matrice carrée ?  
 
-----------------------------------------------------------------------------
+ -initialiser P                                           P : Out T_Ligne ;
+ Pour j de 0 à N-1 Faire
+      Pour i de 0 à N-1 Faire
+           P(j) <-  P(j) + L(i)*G(i,j) ;                 L : in T_Ligne ;      G : in T_Google ;  
+      Fin Pour ;
+ Fin Pour ;
+ Retourner P ;
+ 
+ 
