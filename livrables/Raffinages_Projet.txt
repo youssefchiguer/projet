@@ -1,179 +1,193 @@
--R0 : Calculer PageRank et le Poids d’un réseau donné
+-R0Â : Calculer PageRank et le Poids dâ€™un rÃ©seau donnÃ©
 
--R1 : Comment calculer le poids et le PageRank d’un réseau donné ? 
+-R1Â : Comment calculer le poids et le PageRank dâ€™un rÃ©seau donnÃ©Â ? 
 
    No_Argument_Error  :  Exception  ; 
     alpha : in Flottant ;                                   --La valeur de alpha 
-    kmax : in Integer ;                                     --Le nombre d'itération max
-    n :  in Integer ;                                            --Le nombre de pages web à classer 
-Lire et récupérer les données à partir du réseau
- Construire la matrice de Google G 
-Calculer le poids des nœuds du réseau 
-Récupérer l’identifiant des nœuds par ordre décroissant du poids
-Attribuer les valeurs aux paramètres de la ligne de commande
-
--R2 : Comment lire et récupérer les données à partir du réseau ?
-
-   -  Compter le nombre de lignes du réseau en ne tenant pas compte de la première ligne    s : out Integer
-   - Stocker les valeurs du réseau dans une matrice de s lignes et deux colonnes                       L : out T_Mat
-
--R2 : Comment construire la matrice de Google G ? 
-
-   - Remplir la matrice H                                                                    H : out T_Google
-   - Construire la matrice S à partir de H                                        S : out T_Google
-    - Construire une matrice qui ne contient que les 1                E : out T_Google     
-    G  ß  alpha*S + ((1-alpha)/N)*E ;       -- Définir le produit d’une constant avec une matrice ? 
-
--R2 : Comment Calculer le poids des nœuds du réseau ? 
-   - Calculer le poids non trié du réseau             A : Out T_Ligne 
-   - Trier la matrice ligne A               --trier une matrice ligne A de type T_Ligne de manière décroissante
+    kmax : in Integer ;                                     --Le nombre d'itÃ©ration max
+    n :  in Integer ;                                       --Le nombre de pages web Ã  classer 
+  
+  -Lire et rÃ©cupÃ©rer les donnÃ©es Ã  partir du rÃ©seau
+  -Construire la matrice de Google G 
+  -Calculer le poids des nÅ“uds du rÃ©seau 
+  -RÃ©cupÃ©rer lâ€™identifiant des nÅ“uds par ordre dÃ©croissant du poids
+  -Attribuer les valeurs aux paramÃ¨tres de la ligne de commande
 
 
--R2 : Comment récupérer l’identifiant des nœuds par ordre décroissant du poids ? 
+-R2Â : Comment lire et rÃ©cupÃ©rer les donnÃ©es Ã  partir du rÃ©seauÂ ?
 
-A  ß  Le Poids non trié du réseau  ;                    A : Out T_Ligne
-L  ß  Le poids trié du réseau  ;                             L : Out T_Ligne 
-Pour i de 0 à N-1 Faire
-        Pour j de 0 à N-1 Faire
+   - Compter le nombre de lignes du rÃ©seau en ne tenant pas compte de la premiÃ¨re ligne                sÂ : out Integer
+   - Stocker les valeurs du rÃ©seau dans une matrice de s lignes et deux colonnes                       LÂ : out T_Mat
+
+-R2Â : Comment construire la matrice de Google GÂ ? 
+
+   - Remplir la matrice H                                                                    HÂ : out T_Google
+   - Construire la matrice S Ã  partir de H                                                   SÂ : out T_Google
+   - Construire une matrice qui ne contient que les 1                                        E : out T_Google     
+    G  <-  alpha*S + ((1-alpha)/N)*E ;       -- DÃ©finir le produit dâ€™une constant avec une matrice ? 
+
+-R2Â : Comment Calculer le poids des nÅ“uds du rÃ©seauÂ ? 
+   
+   - Calculer le poids non triÃ© du rÃ©seau             AÂ : Out T_Ligne      --Le type T_Ligne est un tableau de taille N, voire une matrice ligne de N Ã©lÃ©ments
+   - Trier la matrice ligne A                                              --trier une matrice ligne A de type T_Ligne de maniÃ¨re dÃ©croissante
+   - Stocker les valeurs de A dans un fichier Poids.p 
+
+-R2Â : Comment rÃ©cupÃ©rer lâ€™identifiant des nÅ“uds par ordre dÃ©croissant du poidsÂ ? 
+
+A  <-  Le Poids non triÃ© du rÃ©seau  ;                     AÂ : Out T_Ligne
+L  <-  Le poids triÃ© du rÃ©seau  ;                         LÂ : Out T_Ligne 
+Pour i de 0 Ã  N-1 Faire
+        Pour j de 0 Ã  N-1 Faire
             Si  A(j) = L(i) Alors
-                Ecrire(j) ;                          -- Afficher l'identifiant du nœud selon l'ordre décroissant du poids
-               Retour_ligne ;            
+                Stocker j dans un fichier PageRank.ord ;                   --On doit faire l'opÃ©ration dans cette boucle                                
            Fin Si ; 
       Fin Pour ;
   Fin Pour ;
 
-R2 : Comment attribuer les valeurs aux paramètres de la ligne de commande ? 
+R2Â : Comment attribuer les valeurs aux paramÃ¨tres de la ligne de commandeÂ ? 
 
 ------------------------------------------------------------------------------------------------------------------
 
     
-R3 : Comment Compter le nombre de lignes du réseau en ne tenant pas compte de la première ?                                         
-s  ß 0 ;
-open(File, In_File, Argument(Argument_Count)) ;
- Get(File, n) ;                              --Stocker la valeur du premier entier du fichier File dans l’entier n 
+R3Â : Comment Compter le nombre de lignes du rÃ©seau en ne tenant pas compte de la premiÃ¨reÂ ?                                         
+s  <- 0 ;
+open(File, In_File, Argument(Argument_Count)) ;         -- File est le fichier.net qui reprÃ©sente le rÃ©seau 
+ Get(File, n) ;                                         --Stocker la valeur du premier entier du fichier File dans lâ€™entier n 
   Tant que non End_Of_File(File)  Faire
             Get(File, a) ;   
-             s  ß  s+1 ;
+            s  <-  s+1 ;
  Fin Tant que  ;
   Retourner  s/2;
 
-R3 : Comment Stocker les valeurs du réseau dans une matrice de s lignes et deux colonnes ?    
+R3Â : Comment Stocker les valeurs du rÃ©seau dans une matrice de s lignes et deux colonnesÂ ?    
 
-Si  Argument_Count >= 1  Alors                                            -- Argument_Count compte le nombre de    
-                                                                                                           -- paramètres de la ligne de commande                   begin
-           open(File, In_File, Argument(Argument_Count)) ;
-           Get(File, n) ;                              -- Stocker la première valeur du fichier File dans l’entier n
-               i  ß  1 ;
-               Tant que  i <= Max and not End_Of_File(File) loop     -- Max est le nombre de lignes du fichier 
-                                                                                         -- file en ne tenant pas compte de la première ligne
-                    Get(File, L(i,1)) ;                       --Stocker les valeurs de gauche dans L(i,1) 
-                    Get(File, L(i,2)) ;                       --Stocker les valeurs de droite dans L(I,2)
-                    i  ß  i+1 ;
-               Fin Tant que  ;
-               close(File);
-            end;
+Si  Argument_Count >= 1  Alors             -- Argument_Count compte le nombre de paramÃ¨tres de la ligne de commande
+    begin
+       open(File, In_File, Argument(Argument_Count)) ;
+       Get(File, n) ;                              -- Stocker la premiÃ¨re valeur du fichier File dans lâ€™entier n
+       i  <-  1 ;
+       Tant que  i <= Max and not End_Of_File(File) loop     -- Max est le nombre de lignes du fichier file en ne tenant pas compte de la premiÃ¨re ligne
+            Get(File, L(i,1)) ;                              --Stocker les valeurs de gauche dans L(i,1) 
+            Get(File, L(i,2)) ;                              --Stocker les valeurs de droite dans L(I,2)
+            i  <-  i+1 ;
+       Fin Tant que  ;
+       close(File);
+    end;
 Sinon
-            LEVER No_Argument_Error;
+    LEVER No_Argument_Error;
 Fin Si ; 
 Retourner  L ;                 
 
 
 
-R3 : Comment remplir la matrice H ?
+R3Â : Comment remplir la matrice HÂ ?
 
--Initialiser H                                                                     H : Out T_Google 
- -Calculer le nombre d’hyperliens pour chaque nœud et le stocker dans une matrice ligne M
-  Pour i de 1 à Max Faire                                                --Max est le nombre de lignes-1 du réseau 
-            H(L(i,1),L(i,2))  ß  M(L(i,1)) ;
+-Initialiser H                                                                               HÂ : Out T_Google 
+-Calculer le nombre dâ€™hyperliens pour chaque nÅ“ud et le stocker dans une matrice ligne M
+  Pour i de 1 Ã  Max Faire                                                                    --Max est le nombre de lignes-1 du rÃ©seau 
+            H(L(i,1),L(i,2))  <-  M(L(i,1)) ;
  Fin Pour;
 
-R3 :   Comment construire la matrice S à partir de H ?
+R3Â :   Comment construire la matrice S Ã  partir de HÂ ?
 
-S  ß  H ;
-        Pour i de 0 à N-1 Faire
-            j  ß 0 ;
+S  <- H ;
+        Pour i de 0 Ã  N-1 Faire
+            j  <- 0 ;
             Tant Que  j <= N-1 et S(i,j) = 0 Faire
-                  j  ß j+1 ;
+                  j  <- j+1 ;
             Fin Tant Que  ;
             Si  j = N Alors
-                 Pour  k  de 0 à N-1 Faire
-                     S(i,k)  ß 1/N ;
+                 Pour  k  de 0 Ã  N-1 Faire
+                     S(i,k)  <- 1/N ;
                 Fin Pour ;
            Fin Si ;
        Fin Pour  ;
 
-R3 : Comment construire une matrice qui ne contient que les 1 ?                                                                                                        
+R3Â : Comment construire une matrice qui ne contient que les 1Â ?                                                                                                        
 
-Pour i de 0 à N-1 Faire 
-     Pour j de 0 à N-1 Faire 
-          G(i,j) ß 1.0 ;                                                            G : Out T_Google  
-         --On affecte 1.0 à L car T_Google a des valeurs de types T_Double
-    Fin Pour ; 
-Fin Pour ;
+Pour i de 0 Ã  N-1 Faire 
+     Pour j de 0 Ã  N-1 Faire 
+          G(i,j) <- 1.0Â ;                                                            GÂ : Out T_Google  
+         --On affecte 1.0 Ã  L car T_Google a des valeurs de types T_Double
+    Fin PourÂ ; 
+Fin PourÂ ;
 
 
-R3 : Comment calculer le poids non trié ?
+R3Â : Comment calculer le poids non triÃ©Â ?
 
-      G  ß  Google_naive(File) ;
-       -remplir L avec les valeurs 1/N  ;                                                         L : in T_Ligne
-       Pour  k de  1 à kmax Faire
-L ß  le produit de la matrice ligne L avec la matrice G ;
-        Fin Pour  ;
-        Retourner L ;
+        G  <-  Google_naive(File) ;
+       -remplir L avec les valeurs 1/N  ;                                                         LÂ : Out T_Ligne
+       Pour  k de  1 Ã  kmax Faire
+          L <-  produit(L,G);                               --Le produit d'une matrice ligne L avec une matrice G 
+       Fin Pour  ;
+       Retourner L ;
 
-R3 : Comment trier une matrice ligne ? 
+R3Â : Comment trier une matrice ligneÂ ? 
 
-        Pour  i  de  0 à  N-2 Faire
-            Indice_Max  ß i ;                                                        Indice_Max : Integer ; 
-            Max  ß  L (Indice_Max);                                           Max : T_Double ;          L : Out T_Ligne 
-            Pour I de i+1 à N-1 Faire
+        Pour  i  de  0 Ã   N-2 Faire
+            Indice_Max  <- i ;                                                        Indice_Max : Integer ; 
+            Max  <-  L (Indice_Max);                                           Max : T_Double ;          LÂ : Out T_Ligne ;
+            Pour I de i+1 Ã  N-1 Faire
                 Si L (I) > Max Alors
-                    Indice_Max  ß  I ;
-                    Max ß  L (Indice_Max);
+                    Indice_Max  <-  I ;
+                    Max <- L (Indice_Max);
                 Fin Si ;
             Fin Pour ;
-            -- Echanger les éléments aux indices Indice_Max et i 
-           L (Indice_Max)  ß  L (i) ;
-           L (i)  ß  Max ;
-     Fin Pour ;
+            -- Echanger les Ã©lÃ©ments aux indices Indice_Max et i 
+           L (Indice_Max)  <-  L (i) ;
+           L (i)  <-  Max ;
+     Fin PourÂ ;
 
-R4 : Comment initialiser une matrice ligne ? 
+R3 : Comment stocker les valeurs d'une matrice ligne A dans un fichier Poids.p ? 
 
-Pour i de 0 à N-1 Faire 
-          L(i) ß 0.0 ;                                                                L : Out T_Ligne   
-         --On affecte 0.0 à L car T_Ligne a des valeurs de types T_Double
-    Fin Pour ; 
-Fin Pour ;
+------------------------------------------------------------------------------- (crÃ©er un fichier et Ã©crire dedans ...) 
 
-R4 : Comment initialiser une matrice de Taille N*N ? 
 
-Pour i de 0 à N-1 Faire 
-     Pour j de 0 à N-1 Faire 
-          G(i,j) ß 0.0 ;                                                            G : Out T_Google  
-         --On affecte 0.0 à L car T_Google a des valeurs de types T_Double
-    Fin Pour ; 
-Fin Pour ;
+R4Â : Comment initialiser une matrice ligneÂ ? 
 
-R4 : Comment Calculer le nombre d'hyperliens pour chaque nœud et les stocker dans une matrice ligne ? 
+Pour i de 0 Ã  N-1 Faire 
+          L(i) <- 0.0Â ;                                                                LÂ : Out T_Ligne   
+         --On affecte 0.0 Ã  L car T_Ligne a des valeurs de types T_Double 
+Fin PourÂ ;
 
-L  ß Stocker(File) ;                                    -- Stocker est la fonction qui stocke les valeurs du réseau dans 
-                                                                     -- une matrice à s lignes et 2 colonnes (R3 précédant) 
--Initialiser N                                               N : Out T_Ligne  
-Pour i de 0 à N-1 Faire
-        s  ß 0 ;
-        Pour  j de 1 à Max Faire
-              Si L(j,1) = i Alors                        --and L(j,2) /= L(k,2) and L(k,1) = I 
-                     s ß s+1 ;
+R4Â : Comment initialiser une matrice de Taille N*NÂ ? 
+
+Pour i de 0 Ã  N-1 Faire 
+     Pour j de 0 Ã  N-1 Faire 
+          G(i,j) <- 0.0Â ;                                                            GÂ : Out T_Google  
+         --On affecte 0.0 Ã  L car T_Google a des valeurs de types T_Double
+    Fin PourÂ ; 
+Fin PourÂ ;
+
+R4Â : Comment Calculer le nombre d'hyperliens pour chaque nÅ“ud et les stocker dans une matrice ligneÂ ? 
+
+L  <- Stocker(File) ;                                               -- Stocker est la fonction qui stocke les valeurs du rÃ©seau dans 
+                                                                    -- une matrice Ã  s lignes et 2 colonnes (vu prÃ©cÃ©demment au niveau R3) 
+-Initialiser N                                                      N : Out T_Ligne  
+Pour i de 0 Ã  N-1 Faire
+        s  <- 0 ;
+        Pour  j de 1 Ã  Max Faire
+              Si L(j,1) = i Alors                        --and L(j,2) /= L(k,2) and L(k,1) = I ( on fait une autre boucle pour k ? )
+                     s <- s+1 ;
               Fin Si ;
          Fin Pour  ;
-         Si  s = 0 alors                                  -- On fait un raffinage pour remplir N ? 
-               N(i) ß  0.0 ;                              -- ou on fait T_Double(0)
+         Si  s = 0 alors                                 
+               N(i) <-  0.0 ;                              -- ou on fait T_Double(0)
         Sinon
-               N(i)  ß  1/s ;
+               N(i) <-  1/s ;
          Fin Si ;
  Fin Pour ;
  Retourner N ; 
 
 
-R4 : Comment remplir une matrice ligne avec les valeurs 1/N ? 
-R4 : Comment  faire le produit d’une matrice ligne avec une matrice carrée ?  
+R4Â : Comment remplir une matrice ligne avec les valeurs 1/NÂ ? 
+
+
+Pour i de 0 Ã  N-1 Faire 
+    L(i) <- 1/N ;                                        L : Out T_Ligne
+Fin Pour ; 
+
+
+R4Â : Comment  faire le produit dâ€™une matrice ligne avec une matrice carrÃ©eÂ ? Â 
+
+----------------------------------------------------------------------------
