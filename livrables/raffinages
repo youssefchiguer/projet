@@ -1,191 +1,121 @@
 -R0 : Calculer le PageRank d’un réseau donné
+--------------------------------------------
 
 -R1 : Comment calculer le PageRank d’un réseau donné ? 
                              
   
-  -Récupérer les données du réseau               n : out Entier ;       alpha : out Flottant ;          kmax : out Entier ;         File : out T_net ;  
-  -Construire la matrice de Google G             G : Out T_Google ;     alhpa : in Flottant ;           n : in Entier ;             File : in T_net ;
-  -Calculer le poids des nœuds du réseau         G : Out T_Google ;     poids : Out T_Ligne             n : in Entier ;             kmax : in Entier ;          File : in T_net ;
-  -Générer le PageRank.ord et Poids.p            poids : in T_Ligne ;                   
-  
+	-Récupérer les données du réseau               alpha : out Flottant ;          kmax : out Entier ;         File : out T_net ;  
+	-Construire la matrice de Google G             G : Out T_Google ;     alhpa : in Flottant ;           n : in Entier ;             File : in T_net ;
+	-Calculer le poids des nœuds du réseau         G : Out T_Google ;     poids : Out T_Ligne             n : in Entier ;             kmax : in Entier ;          File : in T_net ;
+	-Générer le PageRank.ord et Poids.p            poids : in T_Ligne ;                   
 
--R2 : Comment récupérer les données à partir du réseau ?
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-R2 : Comment récupérer les données du réseau ?
   
-   - Récupérer les données de la ligne de commande 
-   - Compter le nombre de lignes du réseau en ne tenant pas compte de la première ligne                s : out Integer
-   - Stocker les valeurs du réseau dans une matrice de s lignes et deux colonnes                       L : out T_Mat
+	alpha <- 0.85
+	kmax <- 150
+	Si Arguments < 1 Alors
+		Ecrire("Il manque un argument")
+	Fin Si
+	File <- Fichier(Argument(4))
+	- Remplacer les donnees au cas d'existance				alpha : in out Flottant ;          kmax : in out Entier ;
+	- Extraire les hyperliens                    				Hyperlien : out T_Google;       n : out Entier ; 	File: in T_net;
 
 -R2 : Comment construire la matrice de Google G ? 
    
-   - Remplir la matrice H                                                                    H : out T_Google
-   - Construire la matrice S à partir de H                                                   S : out T_Google
-  
-    Pour i de 0 à (n-1) Faire
-		    Pour j de 0 à (n-1) Faire
-			      G(i,j) <- alpha*S(i,j) + (1-alpha)/n
-        Fin Pour
-    Fin Pour    
+	- Remplir la matrice H                                                                    H : out T_Google
+	- Construire la matrice S à partir de H                                                   S : out T_Google
+
+	Pour i de 0 à (n-1) Faire
+		Pour j de 0 à (n-1) Faire
+			G(i,j) <- alpha*S(i,j) + (1-alpha)/n
+		Fin Pour
+	Fin Pour    
         
         
 -R2 : Comment Calculer le poids des nœuds du réseau ? 
    
-   - Calculer le poids non trié du réseau             poids : Out T_Ligne          --Le type T_Ligne est un tableau de taille N, voire une matrice ligne de N éléments
-   - Trier la matrice ligne poids                                                  --trier une matrice ligne A de type T_Ligne de manière décroissante
- 
+	- Calculer pi_zero.            pi_zero: out Ligne
+	Initialiser(poids)                 poids : out Ligne
+	poids <-pi_zero
+	Pour i de 1 à kmax Faire
+		poids <- Produit(poids,G)
+	Fin kmax        
+                                                    
+-R2 : Comment Générer le PageRank.ord et Poids.p ? 
+	Associer les poids à leurs pages.            			page_poids : out T_LCA;         poids: in Ligne
+	Transformer les resultas en Chaine de Characteres 		PageRank, Poids: out Chaine de Characteres
+	Stocker les pages dans PageRank.ord et les poids dans Poids.p	PageRank, Poids: in Chaine de Characteres
 
-***-R2 : Comment Générer le PageRank.ord et Poids.p ? 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-poids  <-  Le Poids non trié du réseau  ;                     poids : Out T_Ligne
-L  <-  Le poids trié du réseau  ;                             L : Out T_Ligne 
-Pour i de 0 à N-1 Faire
-        Pour j de 0 à N-1 Faire
-            Si poids(j) = L(i) Alors
-                Stocker j dans un fichier PageRank.ord ;                                                  
-           Fin Si ; 
-      Fin Pour ;
- Fin Pour ;
+-R3 : Comment Remplacer les donnees au cas d'existance ?
+	kmax <- Argument(2)
+	alpha <- Argument(3)
+	Si Erreur_Argument Alors
+		Ecrire("Verifier les arguments d'entres")
+	Fin Si
 
-
-***-R3 : Comment Récupérer les données de la ligne de commande ? 
-
------------------------------------------------------------------
-    
-R3 : Comment Compter le nombre de lignes du réseau en ne tenant pas compte de la première ?                                         
- s  <- 0 ;          s : out Entier 
- a <- 0 ;           a : out Entier 
- open(File, In_File, Argument(Argument_Count)) ;         
- Get(File, n) ;                                         
- Tant que non End_Of_File(File) Faire
-            Get(File, a) ;   
-            s  <-  s+1 ;
- Fin Tant que ;
-  Retourner  s/2;
-
-***-R3 : Comment Stocker les valeurs du réseau dans une matrice de s lignes et deux colonnes ?    
-
-Si  Argument_Count >= 1  Alors             
-    begin
-       open(File, In_File, Argument(Argument_Count)) ;
-       Get(File, n) ;                              
-       i  <-  1 ;
-       Tant que  i <= Max and not End_Of_File(File) loop   
-            Get(File, L(i,1)) ;                              
-            Get(File, L(i,2)) ;                              
-            i  <-  i+1 ;
-       Fin Tant que  ;
-       close(File);
-    end;
-Sinon
-    LEVER No_Argument_Error;  
-Fin Si ; 
-Retourner  L ;                 
-
-
+-R3 : Comment Extraire les hyperliens ?                    
+	Initialiser(Hyperlien)						Hyperlien : out T_Google
+	L <- toT_Liste_net(File)					L : out T_Liste_net
+	n <- L(0,0)							n : out Entier
+	Pour i de 1 à n Faire
+		nmbr= Case_non_vide(L,i)
+		Pour j de 0 à n-1 Faire
+			Hyperlien(i-1,j) <- L(i,j)/nmbr
+		Fin Pour
+	Fin Pour
 
 R3 : Comment remplir la matrice H ?
 
--Initialiser H                                                                                    H : Out T_Google 
--Calculer le nombre d’hyperliens pour chaque nœud et stocker son inverse dans une matrice ligne M
-  Pour i de 1 à Max Faire                                                                        --Max est le nombre de lignes-1 du réseau 
-            H(L(i,1),L(i,2))  <-  M(L(i,1)) ;
- Fin Pour;
-
+	-Initialiser H                                                  H : Out T_Google 
+	-Calculer le nombre d’hyperliens.
+	 Pour i de 0 à n-1 Faire  
+	 	Pour j de 0 à n-1 Faire
+			Si Hyperlien(i,j)/= 0 Alors
+				H(i,j)  <-  1/Hyperlien(i,j)
+			Fin Si
+		Fin Pour;
+	 Fin Pour;
 
 R3 :   Comment construire la matrice S à partir de H ?
 
-S  <- H ;
-        Pour i de 0 à N-1 Faire
-            j  <- 0 ;
-            Tant Que  j <= N-1 et S(i,j) = 0 Faire
-                  j  <- j+1 ;
-            Fin Tant Que  ;
-            Si  j = N Alors
-                 Pour  k  de 0 à N-1 Faire
-                     S(i,k)  <- 1/N ;
-                Fin Pour ;
-           Fin Si ;
+	S  <- H ;
+        Pour i de 0 à n-1 Faire
+        	Si Est_Puit(i) Alors
+			Pour j de 0 à n-1 Faire
+				S(i,j) <- 1/n
+		Fin Si
        Fin Pour  ;
 
+-R3 : Comment Calculer pi_zero?
+	Initialiser(pi_zero)                    pi_zero : out Ligne
+	Pour i de 0 à n Faire
+		pi_zero(i) <- 1/N
+	Fin Si
+	
+-R3 : Commment Associer les poids à leurs pages?
+	Intialiser(page_poids)				page_poids : out T_LCA
+	Pour i de 0 à n-1 Faire
+		Enregister(page_poids,i,poids(i))
+	Fin Pour
+-R3 : Comment Transformer les resultas en Chaine de Characteres?
+	PageRank <- "0"							PageRank : out Chaine de Characteres
+	Poids <- toString(La_Donnee(page_poids,1))			Poids : out Chaine de Characteres
+	Pour i de 1 à n-1 Faire
+		Si La_Donnee(page_poids,i) > La_Donnee(page_poids,i-1) Alors
+			PageRank <- toString(i) + '\n' + PageRank
+			Poids <- toString(La_Donnee(page_poids,1)) + '\n' + Poids
+		Sinon
+			PageRank <- PageRank + '\n' + toString(i)
+			Poids <- Poids + '\n' + toString(La_Donnee(page_poids,1)) 
+		Fin Si
+	Fin Pour
+	Poids <- toString(n) + toString(alpha) + toString(kmax) + '\n' + Poids
 
-
-R3 : Comment calculer le poids non trié ?
-
-        G  <-  Google_naive(File) ;
-       -remplir L avec les valeurs 1/N  ;                                                         L : Out T_Ligne
-       Pour  k de  1 à kmax Faire
-          L <-  produit(L,G);                               --Le produit d'une matrice ligne L avec une matrice G 
-       Fin Pour  ;
-       Retourner L ;
-
-R3 : Comment trier une matrice ligne ? 
-
-        Pour  i  de  0 à  N-2 Faire
-            Indice_Max  <- i ;                                                        Indice_Max : Integer ; 
-            Max  <-  L (Indice_Max);                                           Max : T_Double ;          L : Out T_Ligne ;
-            Pour I de i+1 à N-1 Faire
-                Si L (I) > Max Alors
-                    Indice_Max  <-  I ;
-                    Max <- L (Indice_Max);
-                Fin Si ;
-            Fin Pour ;
-            -- Echanger les éléments aux indices Indice_Max et i 
-           L (Indice_Max)  <-  L (i) ;
-           L (i)  <-  Max ;
-     Fin Pour ;
-
-
-
-R4 : Comment initialiser une matrice ligne ? 
-
-Pour i de 0 à N-1 Faire 
-          L(i) <- 0.0 ;                                                                L : Out T_Ligne   
-         --On affecte 0.0 à L car T_Ligne a des valeurs de types T_Double 
-Fin Pour ;
-
-R4 : Comment initialiser une matrice de Taille N*N ? 
-
-Pour i de 0 à N-1 Faire 
-     Pour j de 0 à N-1 Faire 
-          G(i,j) <- 0.0 ;                                                            G : Out T_Google  
-         --On affecte 0.0 à L car T_Google a des valeurs de types T_Double
-    Fin Pour ; 
-Fin Pour ;
-
-R4 : Comment Calculer le nombre d'hyperliens pour chaque nœud et les stocker dans une matrice ligne ? 
-
-L  <- Stocker(File) ;                                               -- Stocker est la fonction qui stocke les valeurs du réseau dans 
-                                                                    -- une matrice à s lignes et 2 colonnes (vu précédemment au niveau R3) 
--Initialiser N                                                      N : Out T_Ligne  
-Pour i de 0 à N-1 Faire
-        s  <- 0 ;
-        Pour  j de 1 à Max Faire
-              Si L(j,1) = i Alors                        --and L(j,2) /= L(k,2) and L(k,1) = I ( on fait une autre boucle pour k ? )
-                     s <- s+1 ;
-              Fin Si ;
-         Fin Pour  ;
-         Si  s = 0 alors                                 
-               N(i) <-  0.0 ;                              -- ou on fait T_Double(0)
-        Sinon
-               N(i) <-  1/s ;
-         Fin Si ;
- Fin Pour ;
- Retourner N ; 
-
-
-R4 : Comment remplir une matrice ligne avec les valeurs 1/N ? 
-
-
-Pour i de 0 à N-1 Faire 
-    L(i) <- 1/N ;                                        L : Out T_Ligne
-Fin Pour ; 
-
-
-R4 : Comment  faire le produit d’une matrice ligne avec une matrice carrée ?  
-
- -initialiser P                                           P : Out T_Ligne ;
- Pour j de 0 à N-1 Faire
-      Pour i de 0 à N-1 Faire
-           P(j) <-  P(j) + L(i)*G(i,j) ;                 L : in T_Ligne ;      G : in T_Google ;  
-      Fin Pour ;
- Fin Pour ;
- Retourner P ;
+-R3 : Comment Stocker les pages dans PageRank.ord et les poids dans Poids.p?
+	Enregister(Poids.p, Poids)
+	Enregister(PageRank.ord, PageRank)
+	
